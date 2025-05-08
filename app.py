@@ -13,17 +13,22 @@ st.markdown(
     """
     <style>
     .stApp {
-        background: linear-gradient(to right, #ffe0e0, #fffaf0);
-        font-family: 'Verdana', sans-serif;
+        background: linear-gradient(to right, #ffffff, #f2f2f2);
+        font-family: 'Segoe UI', sans-serif;
+        color: #1a1a1a;
     }
     h1, h2, h3 {
-        color: #8B0000;
+        color: #003366;
     }
     .stButton>button {
-        background-color: #8B0000;
+        background-color: #0066cc;
         color: white;
         border-radius: 8px;
         padding: 0.5em 1em;
+        font-weight: bold;
+    }
+    .css-1cpxqw2 {
+        color: #1a1a1a;
     }
     </style>
     """,
@@ -41,8 +46,8 @@ def clear_old_audios(days):
 clear_old_audios(7)
 os.makedirs("temp", exist_ok=True)
 
-st.markdown("<h1>🖼️ Convierte Texto de Imágenes a Audio</h1>", unsafe_allow_html=True)
-st.markdown("<p>Usa tu cámara o sube una imagen, extrae texto y escúchalo traducido en tu idioma favorito.</p>", unsafe_allow_html=True)
+st.markdown("<h1>📷 Convierte Texto de Imágenes en Audio</h1>", unsafe_allow_html=True)
+st.markdown("<p style='color:#333;'>Captura o sube una imagen, y escucha el texto en el idioma que elijas.</p>", unsafe_allow_html=True)
 
 use_camera = st.toggle("📷 Usar cámara")
 
@@ -53,9 +58,9 @@ else:
 
 with st.sidebar:
     st.header("🎛️ Configuración")
-    apply_filter = st.checkbox("Invertir colores para mejorar lectura")
+    apply_filter = st.checkbox("Invertir colores para mejor lectura")
     st.markdown("---")
-    st.header("🌐 Traducción")
+    st.header("🌍 Traducción")
     translator = Translator()
     lang_options = {
         "Español": "es", "Inglés": "en", "Francés": "fr",
@@ -67,7 +72,7 @@ with st.sidebar:
         "Estándar": "com", "India": "co.in", "Reino Unido": "co.uk",
         "Canadá": "ca", "Australia": "com.au"
     }
-    voice_region = st.selectbox("Acento de voz", list(accents.keys()))
+    voice_region = st.selectbox("Acento del audio", list(accents.keys()))
     show_translated_text = st.checkbox("Mostrar texto traducido")
 
 detected_text = ""
@@ -83,7 +88,7 @@ if uploaded_img:
     img_rgb = cv2.cvtColor(img_cv, cv2.COLOR_BGR2RGB)
     detected_text = pytesseract.image_to_string(img_rgb)
     st.markdown("### ✍️ Texto detectado:")
-    st.write(detected_text)
+    st.write(f"```{detected_text.strip()}```")
 
 if image_buffer:
     bytes_data = image_buffer.getvalue()
@@ -93,7 +98,7 @@ if image_buffer:
     img_rgb = cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB)
     detected_text = pytesseract.image_to_string(img_rgb)
     st.markdown("### ✍️ Texto detectado:")
-    st.write(detected_text)
+    st.write(f"```{detected_text.strip()}```")
 
 def convert_text_to_audio(src_lang, dest_lang, content, region_tld):
     translated = translator.translate(content, src=src_lang, dest=dest_lang)
@@ -104,9 +109,9 @@ def convert_text_to_audio(src_lang, dest_lang, content, region_tld):
     tts.save(filepath)
     return filepath, translated_text
 
-if st.button("🔊 Reproducir audio"):
+if st.button("🔊 Escuchar"):
     if detected_text.strip() == "":
-        st.error("No se ha detectado texto.")
+        st.error("No se ha detectado texto. Asegúrate de subir una imagen con texto claro.")
     else:
         file_path, trans_text = convert_text_to_audio(
             lang_options[input_lang],
@@ -114,8 +119,8 @@ if st.button("🔊 Reproducir audio"):
             detected_text,
             accents[voice_region]
         )
-        audio = open(file_path, "rb")
-        st.audio(audio.read(), format="audio/mp3")
+        with open(file_path, "rb") as audio:
+            st.audio(audio.read(), format="audio/mp3")
         if show_translated_text:
             st.markdown("### 📄 Traducción:")
             st.write(trans_text)
