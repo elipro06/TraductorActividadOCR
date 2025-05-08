@@ -13,22 +13,22 @@ st.markdown(
     """
     <style>
     .stApp {
-        background: linear-gradient(to right, #ffffff, #f2f2f2);
+        background: linear-gradient(to right, #1c1c1c, #2c2c2c);
         font-family: 'Segoe UI', sans-serif;
-        color: #1a1a1a;
+        color: #f5f5f5;
     }
     h1, h2, h3 {
-        color: #003366;
+        color: #00c3ff;
     }
     .stButton>button {
-        background-color: #0066cc;
-        color: white;
+        background-color: #00c3ff;
+        color: #1c1c1c;
         border-radius: 8px;
         padding: 0.5em 1em;
         font-weight: bold;
     }
-    .css-1cpxqw2 {
-        color: #1a1a1a;
+    .stSelectbox label, .stCheckbox label, .stRadio label, .stSidebar, .stSidebarContent {
+        color: #f5f5f5 !important;
     }
     </style>
     """,
@@ -47,7 +47,7 @@ clear_old_audios(7)
 os.makedirs("temp", exist_ok=True)
 
 st.markdown("<h1>📷 Convierte Texto de Imágenes en Audio</h1>", unsafe_allow_html=True)
-st.markdown("<p style='color:#333;'>Captura o sube una imagen, y escucha el texto en el idioma que elijas.</p>", unsafe_allow_html=True)
+st.markdown("<p style='color:#cccccc;'>Captura o sube una imagen, y escucha el texto en el idioma que elijas.</p>", unsafe_allow_html=True)
 
 use_camera = st.toggle("📷 Usar cámara")
 
